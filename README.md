@@ -1,65 +1,45 @@
-🛠 How to Run the Project
-1️⃣ Build & Start the Containers
+## How to Recreate This Project Step by Step
 
-From inside the project folder (coderco-challenge), run:
+1. Create a new folder called `coderco-challenge`.
+2. Inside that folder, create these files:
+   - `count.py` – Flask app that talks to Redis
+   - `Dockerfile` – builds the Python image
+   - `docker-compose.yml` – defines the `web` and `redis` services
+   - `requirements.txt` – lists Python dependencies
+3. Install Docker Desktop and make sure the Docker engine is running.
+4. Open the folder in VS Code.
+5. Build and start everything with Docker Compose:
 
-docker compose up --build
+   docker compose up --build
 
+6. Once both containers are running, open:
+   - `http://localhost:5002/` → welcome page
+   - `http://localhost:5002/count` → visit counter backed by Redis
+7. Stop and clean up the containers when you’re done:
 
-This will:
+   docker compose down -v
 
-Build the Flask app image
+---
 
-Start the Redis container
+## Common Pitfalls (and How to Avoid Them)
 
-Start the Flask container
+1. **Python indentation errors**
 
-Bind port 5002 → your browser
+   If a function in `count.py` isn’t indented correctly, the container will crash on start.
+   - Tip: make sure each function body is indented with 4 spaces under the `def` line.
 
-2️⃣ Access the App
+2. **App file in the wrong place**
 
-Open your browser:
+   Docker needs to find `count.py` inside the same folder as the `Dockerfile` and `docker-compose.yml`.
+   - Tip: confirm the structure looks like:
 
-http://localhost:5002/
+     coderco-challenge/  
+     ├─ count.py  
+     ├─ Dockerfile  
+     ├─ docker-compose.yml  
+     ├─ requirements.txt  
 
-http://localhost:5002/count
+3. **Docker engine not running**
 
-🧪 What We Tested
-
-✔️ Flask app runs inside its own container
-✔️ Redis stores visit counter
-✔️ Both containers communicate through a Docker network
-✔️ /count increases every time you refresh the page
-
-🐞 Errors & Challenges We Faced
-1. IndentationError in count.py
-
-Python functions weren't indented properly.
-
-Solution: rewrote the file cleanly with correct spacing.
-
-2. count.py was in the wrong folder
-
-Docker couldn’t find the file (because it was outside coderco-challenge/)
-
-Solution: moved it into the correct folder.
-
-3. Docker Engine was not running
-
-docker compose commands were freezing with no output.
-
-Solution: updated Docker Desktop + restarted the engine.
-
-4. touch does not work on Windows PowerShell
-
-PowerShell does not support the Linux touch command.
-
-Solution: created README.md using VS Code instead.
-
-📁 Project Structure
-coderco-challenge/
-│   count.py
-│   Dockerfile
-│   docker-compose.yml
-│   requirements.txt
-│   README.md
+   If `docker compose up` hangs or fails immediately, Docker Desktop might not be running.
+   - Tip: open Docker Desktop first and check that it says “Engine running” before using the terminal.
